@@ -1,5 +1,7 @@
 package com.peter.bosta_assessment.cities_list.ui.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -37,6 +40,7 @@ import com.peter.bosta_assessment.R
 import com.peter.bosta_assessment.cities_list.data.models.City
 import com.peter.bosta_assessment.cities_list.ui.composables.CityItem
 import com.peter.bosta_assessment.cities_list.ui.composables.CitySearchField
+import com.peter.bosta_assessment.cities_list.ui.composables.DistrictItem
 import com.peter.bosta_assessment.cities_list.ui.states.CitiesListScreenState
 import com.peter.bosta_assessment.cities_list.ui.viewmodels.CitiesListViewModel
 
@@ -53,8 +57,11 @@ fun CitiesListScreen(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize(),
         citiesListState = screenState.value,
-        onCityItemClicked = {},
-        onSearchQueryChanged = {}
+        onCityItemClicked = viewModel::toggleDistrictVisibility,
+        onSearchQueryChanged = {
+            viewModel.onSearchQueryChanged(it)
+            viewModel.searchCities(it)
+        }
     )
 }
 
@@ -85,18 +92,30 @@ fun CitiesListScreenContent(
                 CircularProgressIndicator()
             }
         }else{
-            Column(
-                modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                citiesListState.citiesList.forEach{ city ->
-                    CityItem(
-                        city = city,
-                        isExpanded = citiesListState.expandedCities.contains(city.cityId),
-                        onClick = {
-                            onCityItemClicked(city)
+                for (city in citiesListState.citiesList) {
+                    val isExpanded = citiesListState.expandedCities.contains(city.cityId)
+                    item{
+                        CityItem(
+                            city = city,
+                            isExpanded = isExpanded,
+                            onClick = {
+                                onCityItemClicked(city)
+                            }
+                        )
+                    }
+                    if(isExpanded){
+                        items(city.districts){ district ->
+                            DistrictItem(
+                                modifier = Modifier.background(MaterialTheme.colorScheme.secondaryContainer).padding(horizontal = 8.dp),
+                                district = district
+                            )
                         }
-                    )
+                    }
                 }
+
             }
         }
 

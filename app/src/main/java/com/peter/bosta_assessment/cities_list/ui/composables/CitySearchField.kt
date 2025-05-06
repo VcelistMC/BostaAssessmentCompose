@@ -33,8 +33,7 @@ fun CitySearchField(
             )
         },
         modifier = modifier
-            .fillMaxWidth()
-            .height(56.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         singleLine = true
     )

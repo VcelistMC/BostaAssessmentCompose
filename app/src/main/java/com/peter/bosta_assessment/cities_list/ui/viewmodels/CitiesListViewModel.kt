@@ -31,13 +31,28 @@ class CitiesListViewModel @Inject constructor(
     fun getCities(){
         viewModelScope.launch {
             _citiesListState.update {
-                _citiesListState.value.copy(isLoading = true)
+                it.copy(isLoading = true)
             }
             val cities = cityRepo.getCities("60e4482c7cb7d4bc4849c4d5")
             _citiesListState.update {
-                _citiesListState.value.copy(isLoading = false, citiesList = cities)
+                it.copy(isLoading = false, citiesList = cities)
             }
             fullCityList = cities
+        }
+    }
+
+    fun toggleDistrictVisibility(city: City){
+        val ids = _citiesListState.value.expandedCities
+        if(ids.contains(city.cityId)){
+            ids.remove(city.cityId)
+        }else{
+            ids.add(city.cityId)
+        }
+    }
+
+    fun onSearchQueryChanged(query: String){
+        _citiesListState.update {
+            it.copy(searchQuery = query)
         }
     }
 
@@ -45,7 +60,9 @@ class CitiesListViewModel @Inject constructor(
         val query = text?.lowercase()?.trim().orEmpty()
 
         if (query.isBlank()) {
-//            _cityList.postValue(fullCityList)
+            _citiesListState.update {
+                it.copy(citiesList = fullCityList)
+            }
             return
         }
 
@@ -72,6 +89,8 @@ class CitiesListViewModel @Inject constructor(
             }
         }
 
-//        _cityList.postValue(refinedResults)
+        _citiesListState.update {
+            it.copy(citiesList = refinedResults)
+        }
     }
 }

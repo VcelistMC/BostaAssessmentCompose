@@ -52,22 +52,22 @@ fun CityItem(
             }
 
         }
-        AnimatedVisibility(
-            visible = isExpanded
-        ) {
-            LazyColumn(
-                modifier = Modifier
-                    .background(color = MaterialTheme.colorScheme.secondaryContainer),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(city.districts){ district ->
-                    DistrictItem(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        district = district
-                    )
-                }
-            }
-        }
+//        AnimatedVisibility(
+//            visible = isExpanded
+//        ) {
+//            LazyColumn(
+//                modifier = Modifier
+//                    .background(color = MaterialTheme.colorScheme.secondaryContainer),
+//                verticalArrangement = Arrangement.spacedBy(8.dp)
+//            ) {
+//                items(city.districts){ district ->
+//                    DistrictItem(
+//                        modifier = Modifier.padding(horizontal = 8.dp),
+//                        district = district
+//                    )
+//                }
+//            }
+//        }
     }
 
 }
