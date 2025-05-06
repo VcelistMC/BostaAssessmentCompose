@@ -12,75 +12,93 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.peter.bosta_assessment.R
 import com.peter.bosta_assessment.cities_list.data.models.City
 import com.peter.bosta_assessment.cities_list.ui.composables.CityItem
 import com.peter.bosta_assessment.cities_list.ui.composables.CitySearchField
+import com.peter.bosta_assessment.cities_list.ui.states.CitiesListScreenState
+import com.peter.bosta_assessment.cities_list.ui.viewmodels.CitiesListViewModel
 
 @Composable
-fun CitiesListScreen(modifier: Modifier = Modifier, cityList: List<City>) {
-    Scaffold { padding ->
-        CitiesListScreenContent(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(padding),
-            cityList = cityList
-        )
+fun CitiesListScreen(modifier: Modifier = Modifier) {
+    val viewModel = hiltViewModel<CitiesListViewModel>()
+    val screenState = viewModel.citiesListState.collectAsState()
+
+    LaunchedEffect(true) {
+        viewModel.getCities()
     }
+
+    CitiesListScreenContent(
+        modifier = modifier
+            .fillMaxSize(),
+        citiesListState = screenState.value,
+        onCityItemClicked = {},
+        onSearchQueryChanged = {}
+    )
 }
 
 @Composable
 fun CitiesListScreenContent(
     modifier: Modifier = Modifier,
-    cityList: List<City>,
+    citiesListState: CitiesListScreenState,
+    onCityItemClicked: (City) -> Unit,
+    onSearchQueryChanged: (String) -> Unit
 ){
-    val configuration = LocalConfiguration.current
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "Choose the delivery area",
+            text = stringResource(R.string.choose_the_delivery_area),
             fontWeight = FontWeight.Bold,
             fontSize = 28.sp
         )
         CitySearchField(
-            query = "",
-            onQueryChange = {}
+            query = citiesListState.searchQuery,
+            onQueryChange = onSearchQueryChanged
         )
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            cityList.forEach{ city ->
-                CityItem(
-                    city = city,
-                    isExpanded = true,
-                    onClick = {
-
-                    }
-                )
+        if(citiesListState.isLoading){
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                CircularProgressIndicator()
+            }
+        }else{
+            Column(
+                modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState()),
+            ) {
+                citiesListState.citiesList.forEach{ city ->
+                    CityItem(
+                        city = city,
+                        isExpanded = citiesListState.expandedCities.contains(city.cityId),
+                        onClick = {
+                            onCityItemClicked(city)
+                        }
+                    )
+                }
             }
         }
-    }
-}
 
-@Preview
-@Composable
-fun CitiesListScreenContentPreview(){
-    CitiesListScreenContent(
-        cityList = City.mockList
-    )
+    }
 }

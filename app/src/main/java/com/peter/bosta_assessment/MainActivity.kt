@@ -15,7 +15,9 @@ import com.peter.bosta_assessment.cities_list.data.models.City
 import com.peter.bosta_assessment.cities_list.ui.screens.CitiesListScreen
 import com.peter.bosta_assessment.cities_list.ui.screens.CitiesListScreenContent
 import com.peter.bosta_assessment.ui.theme.BostaAssessmentComposeTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +27,6 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CitiesListScreen(
                         modifier = Modifier.padding(innerPadding),
-                        cityList = City.mockList
                     )
                 }
             }

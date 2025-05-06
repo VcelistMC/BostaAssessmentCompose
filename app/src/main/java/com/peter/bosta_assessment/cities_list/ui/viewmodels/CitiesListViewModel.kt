@@ -7,9 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.peter.bosta_assessment.cities_list.data.mappers.CityMapper
 import com.peter.bosta_assessment.cities_list.data.models.City
 import com.peter.bosta_assessment.cities_list.data.repo.CityRepo
+import com.peter.bosta_assessment.cities_list.ui.states.CitiesListScreenState
 import com.peter.bosta_assessment.common.network.CityService
 import com.peter.bosta_assessment.common.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,22 +22,21 @@ import javax.inject.Inject
 class CitiesListViewModel @Inject constructor(
     private val cityRepo: CityRepo
 ): BaseViewModel() {
-    private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean>
-        get() = _isLoading
-
-    private val _cityList = MutableLiveData<List<City>>()
-    val cityList: LiveData<List<City>>
-        get() = _cityList
+    private var _citiesListState = MutableStateFlow(CitiesListScreenState())
+    val citiesListState: StateFlow<CitiesListScreenState>
+        get() = _citiesListState.asStateFlow()
 
     private var fullCityList = emptyList<City>()
 
     fun getCities(){
         viewModelScope.launch {
-            _isLoading.postValue(true)
+            _citiesListState.update {
+                _citiesListState.value.copy(isLoading = true)
+            }
             val cities = cityRepo.getCities("60e4482c7cb7d4bc4849c4d5")
-            _isLoading.postValue(false)
-            _cityList.postValue(cities)
+            _citiesListState.update {
+                _citiesListState.value.copy(isLoading = false, citiesList = cities)
+            }
             fullCityList = cities
         }
     }
@@ -41,7 +45,7 @@ class CitiesListViewModel @Inject constructor(
         val query = text?.lowercase()?.trim().orEmpty()
 
         if (query.isBlank()) {
-            _cityList.postValue(fullCityList)
+//            _cityList.postValue(fullCityList)
             return
         }
 
@@ -68,6 +72,6 @@ class CitiesListViewModel @Inject constructor(
             }
         }
 
-        _cityList.postValue(refinedResults)
+//        _cityList.postValue(refinedResults)
     }
 }

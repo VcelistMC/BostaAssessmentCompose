@@ -67,4 +67,5 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.56.1")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 }

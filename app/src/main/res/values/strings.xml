@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Bosta Assessment Compose</string>
+    <string name="choose_the_delivery_area">Choose the delivery area</string>
 </resources>
