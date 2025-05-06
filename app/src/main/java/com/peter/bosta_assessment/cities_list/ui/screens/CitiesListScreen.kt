@@ -44,7 +44,7 @@ fun CitiesListScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CitiesListScreenContent(
+private fun CitiesListScreenContent(
     modifier: Modifier = Modifier,
     citiesListState: CitiesListScreenState,
     onUserIntent: (CitiesListIntent) -> Unit

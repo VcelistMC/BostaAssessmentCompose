@@ -15,30 +15,7 @@ data class City(
             cityName = "Alexandria",
             cityOtherName = "الاسكندريه",
             cityCode = "EG-02",
-            districts = listOf(
-                District(
-                    zoneId = "9mih4NXL1GF",
-                    zoneName = "Abu Yousef",
-                    zoneOtherName = "ابو يوسف",
-                    districtId = "zoJP71_5Ca1",
-                    districtName = "Abu Yousef",
-                    districtOtherName = "ابو يوسف",
-                    pickupAvailability = true,
-                    dropOffAvailability = true,
-                    coverage = "BOSTA"
-                ),
-                District(
-                    zoneId = "9mih4NXL1GF",
-                    zoneName = "Abu Yousef",
-                    zoneOtherName = "ابو يوسف",
-                    districtId = "Naw9Fm_UfMS",
-                    districtName = "Qetaa ElTarik ElSahrawi",
-                    districtOtherName = "قطاع الطريق الصحراوي",
-                    pickupAvailability = true,
-                    dropOffAvailability = true,
-                    coverage = "BOSTA"
-                )
-            ),
+            districts = District.mockList,
             pickupAvailability = true,
             dropOffAvailability = true,
         )
@@ -48,30 +25,7 @@ data class City(
             cityName = "Assuit",
             cityOtherName = "اسيوط",
             cityCode = "EG-17",
-            districts = listOf(
-                District(
-                    zoneId = "FmVLOstjfZU",
-                    zoneName = "Abanoub",
-                    zoneOtherName = "ابنوب",
-                    districtId = "rd7Eh9bAq_-",
-                    districtName = "Abanoub",
-                    districtOtherName = "ابنوب",
-                    pickupAvailability = true,
-                    dropOffAvailability = true,
-                    coverage = "BOSTA"
-                ),
-                District(
-                    zoneId = "oqeys3A1GmI",
-                    zoneName = "Abu Teg",
-                    zoneOtherName = "ابوتيج",
-                    districtId = "pwa7SgQQU7N",
-                    districtName = "Abu Teg",
-                    districtOtherName = "ابوتيج",
-                    pickupAvailability = true,
-                    dropOffAvailability = true,
-                    coverage = "BOSTA"
-                )
-            ),
+            districts = District.mockList,
             pickupAvailability = true,
             dropOffAvailability = true,
         )
