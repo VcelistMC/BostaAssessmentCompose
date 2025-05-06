@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.peter.bosta_assessment.cities_list.data.models.City
 import com.peter.bosta_assessment.cities_list.ui.screens.CitiesListScreen
-import com.peter.bosta_assessment.cities_list.ui.screens.CitiesListScreenContent
 import com.peter.bosta_assessment.ui.theme.BostaAssessmentComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
