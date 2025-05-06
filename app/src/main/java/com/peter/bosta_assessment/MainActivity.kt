@@ -11,6 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.peter.bosta_assessment.cities_list.data.models.City
+import com.peter.bosta_assessment.cities_list.ui.screens.CitiesListScreen
+import com.peter.bosta_assessment.cities_list.ui.screens.CitiesListScreenContent
 import com.peter.bosta_assessment.ui.theme.BostaAssessmentComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +23,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             BostaAssessmentComposeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    CitiesListScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        cityList = City.mockList
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BostaAssessmentComposeTheme {
-        Greeting("Android")
     }
 }
