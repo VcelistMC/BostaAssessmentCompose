@@ -22,7 +22,6 @@ class CitiesListViewModel @Inject constructor(
     val citiesListState: StateFlow<CitiesListScreenState>
         get() = _citiesListState.asStateFlow()
 
-    private var fullCityList = emptyList<City>()
 
     init {
         onUserIntent(CitiesListIntent.LoadAllCities)
@@ -36,7 +35,6 @@ class CitiesListViewModel @Inject constructor(
             _citiesListState.update {
                 it.copy(isLoading = false, citiesList = cities)
             }
-            fullCityList = cities
         }
     }
 
@@ -70,39 +68,9 @@ class CitiesListViewModel @Inject constructor(
 
     private fun searchCities(text: String?) {
         val query = text?.lowercase()?.trim().orEmpty()
-
-        if (query.isBlank()) {
-            _citiesListState.update {
-                it.copy(citiesList = fullCityList)
-            }
-            return
-        }
-
-        // filter cities where either the city or at least one district matches
-        val matchingCities = fullCityList.filter { city ->
-            city.cityName.lowercase().startsWith(query) ||
-            city.districts.any { district ->
-                district.districtName.lowercase().startsWith(query)
-            }
-        }
-
-        val refinedResults = matchingCities.map { city ->
-            val cityNameMatches = city.cityName.lowercase().startsWith(query)
-
-            if (cityNameMatches) {
-                // If the city name matches, keep it and all its districts
-                city
-            } else {
-                // Otherwise, keep only the matching districts
-                val matchingDistricts = city.districts.filter { district ->
-                    district.districtName.lowercase().startsWith(query)
-                }
-                city.copy(districts = matchingDistricts)
-            }
-        }
-
+        val filteredCities = cityRepo.filterCities(query)
         _citiesListState.update {
-            it.copy(citiesList = refinedResults)
+            it.copy(citiesList = filteredCities)
         }
     }
 }
