@@ -1,14 +1,10 @@
 package com.peter.bosta_assessment.cities_list.ui.viewmodels
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.peter.bosta_assessment.cities_list.data.mappers.CityMapper
 import com.peter.bosta_assessment.cities_list.data.models.City
 import com.peter.bosta_assessment.cities_list.data.repo.CityRepo
+import com.peter.bosta_assessment.cities_list.ui.intents.CitiesListIntent
 import com.peter.bosta_assessment.cities_list.ui.states.CitiesListScreenState
-import com.peter.bosta_assessment.common.network.CityService
 import com.peter.bosta_assessment.common.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +24,10 @@ class CitiesListViewModel @Inject constructor(
 
     private var fullCityList = emptyList<City>()
 
-    fun getCities(){
+    init {
+        onUserIntent(CitiesListIntent.LoadAllCities)
+    }
+    private fun getCities(){
         viewModelScope.launch {
             _citiesListState.update {
                 it.copy(isLoading = true)
@@ -41,7 +40,7 @@ class CitiesListViewModel @Inject constructor(
         }
     }
 
-    fun toggleDistrictVisibility(city: City){
+    private fun toggleDistrictVisibility(city: City){
         val ids = _citiesListState.value.expandedCities
         if(ids.contains(city.cityId)){
             ids.remove(city.cityId)
@@ -50,13 +49,26 @@ class CitiesListViewModel @Inject constructor(
         }
     }
 
-    fun onSearchQueryChanged(query: String){
+    private fun onSearchQueryChanged(query: String){
         _citiesListState.update {
             it.copy(searchQuery = query)
         }
     }
 
-    fun searchCities(text: String?) {
+    fun onUserIntent(citiesListIntent: CitiesListIntent){
+        when(citiesListIntent){
+            is CitiesListIntent.SearchIntent -> {
+                onSearchQueryChanged(citiesListIntent.query)
+                searchCities(citiesListIntent.query)
+            }
+            is CitiesListIntent.ToggleCityIntent -> {
+                toggleDistrictVisibility(citiesListIntent.city)
+            }
+            is CitiesListIntent.LoadAllCities -> getCities()
+        }
+    }
+
+    private fun searchCities(text: String?) {
         val query = text?.lowercase()?.trim().orEmpty()
 
         if (query.isBlank()) {
