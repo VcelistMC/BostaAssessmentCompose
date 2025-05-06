@@ -1,7 +1,9 @@
-package com.peter.bosta_assessment.cities_list.data.mappers
+package com.peter.bosta_assessment
 
 import com.peter.bosta_assessment.cities_list.data.dtos.CityDTO
 import com.peter.bosta_assessment.cities_list.data.dtos.DistrictDTO
+import com.peter.bosta_assessment.cities_list.data.mappers.CityMapper
+import com.peter.bosta_assessment.cities_list.data.mappers.DistrictMapper
 import com.peter.bosta_assessment.cities_list.data.models.City
 import com.peter.bosta_assessment.cities_list.data.models.District
 import org.junit.Assert.assertEquals
