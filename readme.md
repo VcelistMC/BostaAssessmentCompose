@@ -60,14 +60,12 @@ This project is an Android application developed as part of a technical assessme
 ## Code Snippet: Search Logic
 
 ```kotlin
-fun searchCities(text: String?) {
-  val query = text?.lowercase()?.trim().orEmpty()
-
+fun filterCities(query: String): List<City>{
   if (query.isBlank()) {
-    _cityList.postValue(fullCityList)
-    return
+    return fullCityList
   }
 
+  // filter cities where either the city or at least one district matches
   val matchingCities = fullCityList.filter { city ->
     city.cityName.lowercase().startsWith(query) ||
             city.districts.any { district ->
@@ -79,8 +77,10 @@ fun searchCities(text: String?) {
     val cityNameMatches = city.cityName.lowercase().startsWith(query)
 
     if (cityNameMatches) {
+      // If the city name matches, keep it and all its districts
       city
     } else {
+      // Otherwise, keep only the matching districts
       val matchingDistricts = city.districts.filter { district ->
         district.districtName.lowercase().startsWith(query)
       }
@@ -88,7 +88,7 @@ fun searchCities(text: String?) {
     }
   }
 
-  _cityList.postValue(refinedResults)
+  return refinedResults
 }
 ```
 
